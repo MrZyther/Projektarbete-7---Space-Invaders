@@ -4,6 +4,7 @@ var input = new KeyboardInput();
 IMovement movement = new PlayerMovement(input);
 
 Console.Clear();
+Console.CursorVisible = false;
 while (input.ReadInput())
 {
     movement.Move(position);
