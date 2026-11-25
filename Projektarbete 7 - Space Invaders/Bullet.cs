@@ -7,9 +7,9 @@ class Bullet(Position start, int dx = 0, int dy = -1)
         return position.TryMove(dx, dy);
     }
 
-    internal void Render(Map map)
+    public void Render(Map map)
     {
-    char symbol;
+       char symbol;
 
         if (dy < 0)
         {
