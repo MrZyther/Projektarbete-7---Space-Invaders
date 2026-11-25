@@ -1,15 +1,25 @@
 ﻿var map = new Map(15, 15);
-var position = new Position(7, 14, 15, 15);
+var start = new Position(7, 14, 15, 15);
 var input = new KeyboardInput();
 IMovement movement = new PlayerMovement(input);
+List<Bullet> bullets = [];
 
 Console.Clear();
 Console.CursorVisible = false;
 while (input.ReadInput())
 {
-    movement.Move(position);
+    movement.Move(start);
+    input.RunIfPressed(ConsoleKey.Spacebar,
+    () => bullets.Add(new Bullet(start)));
+    bullets.RemoveAll(bullet => !bullet.Move());
     Console.SetCursorPosition(0, 0);
-    position.Draw(map, 'U');
+    start.Draw(map, 'U');
+    
+    foreach (Bullet bullet in bullets)
+    {
+        bullet.Render(map);
+    } 
+    
     map.CreateMap();
     Thread.Sleep(100);
 }
