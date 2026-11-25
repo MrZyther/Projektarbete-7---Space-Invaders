@@ -7,9 +7,20 @@ class Bullet(Position start, int dx = 0, int dy = -1)
         return position.TryMove(dx, dy);
     }
 
-    public void Render(Map map)
+    internal void Render(Map map)
     {
-        position.Draw(map, dy < 0 ? '|' : '!');
+    char symbol;
+
+        if (dy < 0)
+        {
+         symbol = '|';
+        }
+        else
+        {
+            symbol = '!';
+        }
+
+        position.Draw(map, symbol);
     }
 
     public bool Hits(Position target)
