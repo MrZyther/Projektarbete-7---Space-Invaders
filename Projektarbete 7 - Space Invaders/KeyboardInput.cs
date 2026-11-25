@@ -1,0 +1,17 @@
+class KeyboardInput
+{
+    private ConsoleKey KeyPressed;
+
+    public bool ReadInput()
+    {
+        if(Console.KeyAvailable)
+        {
+            KeyPressed = Console.ReadKey(true).Key;
+        }
+        else
+        {
+            KeyPressed = ConsoleKey.NoName;
+        }
+        return KeyPressed != ConsoleKey.Escape;
+    }
+}
