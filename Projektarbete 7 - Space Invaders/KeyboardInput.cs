@@ -14,4 +14,12 @@ class KeyboardInput
         }
         return KeyPressed != ConsoleKey.Escape;
     }
+
+    public void RunIfPressed(ConsoleKey expectedKey, Action action)
+    {
+        if (KeyPressed == expectedKey)
+        {
+            action();
+        }
+    }
 }
