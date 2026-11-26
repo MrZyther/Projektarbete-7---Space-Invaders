@@ -2,31 +2,58 @@ class Game
 {
     public void Start()
     {
-        Map map = new Map(15, 15);
-        Position playerPosition = new Position(7, 14, 15, 15);
+        const int width = 15;
+        const int height = 15;
+
+        Map map = new Map(width, height);
+        Position playerPosition = new Position(width / 2, height - 1, width, height);
         Player player = new Player(
-         new PlayerMovement(), new PlayerCannon(),
-         playerPosition, 3, 'U');
-        Position[] positions =
-        [
-         new Position(4, 2, 15, 15),
- new Position(7, 2, 15, 15),
- new Position(10, 2, 15, 15)
-        ];
-        EnemyMovement enemyMovement = new EnemyMovement(positions);
-        // Subtypspolymorfism: samlingen rymmer tre konkreta IEnemy-typer.
-        IEnemy[] enemies =
-        [
-         new BasicEnemy(enemyMovement, new RegularEnemyCannon(),
- positions[0], 1, 'E'),
- new ArmoredEnemy(enemyMovement, new BlasterCannon(),
- positions[1], 3, 'A'),
- new BasicEnemy(enemyMovement, new RapidfireCannon(),
- positions[2], 2, 'R')
-        ];
-        Wave wave = new Wave(enemies, enemyMovement);
-        IControls playerControl = player;
-        List<Bullet> playerBullets = [];
-        List<Bullet> enemyBullets = [];
+            new PlayerMovement(),
+            new PlayerCannon (),
+            playerPosition,
+            health: 1,
+            symbol: 'U');
+        List<Bullet> bullets = [];
+
+        bool cursorVisible = Console.CursorVisible;
+        Console.Clear();
+        Console.CursorVisible = false;
+
+        try
+        {
+            bool running = true;
+            while (running)
+            {
+                ConsoleKey? key = Console.KeyAvailable
+                    ? Console.ReadKey(intercept: true).Key
+                    : null;
+
+                if (key == ConsoleKey.Escape)
+                {
+                    running = false;
+                    continue;
+                }
+
+                player.Move(playerPosition, key);
+                bullets.AddRange(player.TryFire(key));
+
+                bullets.RemoveAll(bullet => !bullet.Move());
+
+                Console.SetCursorPosition(0, 0);
+                player.Draw(map);
+                foreach (Bullet activeBullet in bullets)
+                {
+                    activeBullet.Render(map);
+                }
+
+                map.CreateMap();
+                Thread.Sleep(100);
+            }
+        }
+        finally
+        {
+            Console.CursorVisible = cursorVisible;
+        }
     }
 }
+
