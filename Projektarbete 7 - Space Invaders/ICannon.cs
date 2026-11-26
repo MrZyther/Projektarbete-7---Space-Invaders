@@ -1,4 +1,4 @@
 interface ICannon
 {
- Bullet? TryFire(Position position, ConsoleKey? key);
+    Bullet[] TryFire(Position position, ConsoleKey? key);
 }

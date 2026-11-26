@@ -9,16 +9,18 @@ class Game
         Position playerPosition = new Position(width / 2, height - 1, width, height);
         Player player = new Player(
             new PlayerMovement(),
-            new PlayerCannon(),
+            new PlayerCannon (),
             playerPosition,
             health: 1,
             symbol: 'U');
         List<Bullet> bullets = [];
 
+        bool cursorVisible = Console.CursorVisible;
         Console.Clear();
         Console.CursorVisible = false;
 
-
+        try
+        {
             bool running = true;
             while (running)
             {
@@ -33,11 +35,7 @@ class Game
                 }
 
                 player.Move(playerPosition, key);
-                Bullet? bullet = player.TryFire(key);
-                if (bullet is not null)
-                {
-                    bullets.Add(bullet);
-                }
+                bullets.AddRange(player.TryFire(key));
 
                 bullets.RemoveAll(bullet => !bullet.Move());
 
@@ -52,5 +50,10 @@ class Game
                 Thread.Sleep(100);
             }
         }
+        finally
+        {
+            Console.CursorVisible = cursorVisible;
+        }
     }
+}
 

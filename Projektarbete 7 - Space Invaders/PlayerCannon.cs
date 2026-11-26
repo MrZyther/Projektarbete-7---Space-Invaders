@@ -1,11 +1,11 @@
 class PlayerCannon : ICannon
 {
-    public Bullet? TryFire(Position position, ConsoleKey? key)
+    public Bullet[] TryFire(Position position, ConsoleKey? key)
     {
         if (key == ConsoleKey.Spacebar)
         {
-            return new Bullet(position);
+            return [new Bullet(position)];
         }
-        return null;
+        return [];
     }
 }

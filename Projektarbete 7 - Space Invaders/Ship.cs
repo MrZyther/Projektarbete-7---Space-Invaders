@@ -25,7 +25,7 @@ class Ship : IMovement
         movement.Move(position, null);
     }
 
-    public Bullet? TryFire(ConsoleKey? key)
+    public Bullet[] TryFire(ConsoleKey? key)
     {
         return cannon.TryFire(position, key);
     }
