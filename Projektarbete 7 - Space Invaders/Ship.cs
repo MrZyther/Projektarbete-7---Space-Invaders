@@ -1,12 +1,12 @@
-class Ship : IMovement
+class Ship : IControls
 {
-    private readonly IMovement movement;
+    private readonly IControls movement;
     private readonly ICannon cannon;
     protected readonly Position position;
     protected readonly char symbol;
     protected int health;
 
-    public Ship(IMovement movement, ICannon cannon, Position position, int health, char symbol)
+    public Ship(IControls movement, ICannon cannon, Position position, int health, char symbol)
     {
         this.movement = movement;
         this.cannon = cannon;

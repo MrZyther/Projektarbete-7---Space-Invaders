@@ -1,4 +1,4 @@
-class PlayerMovement : IMovement
+class PlayerMovement : IControls
 {
     public void Move(Position position, ConsoleKey? key)
     {

@@ -1,6 +1,6 @@
 class Player : Ship
 {
-    public Player(IMovement movement, ICannon cannon, Position position, int health, char symbol) 
+    public Player(IControls movement, ICannon cannon, Position position, int health, char symbol) 
     : base(movement, cannon, position, health, symbol)
     {
     }
