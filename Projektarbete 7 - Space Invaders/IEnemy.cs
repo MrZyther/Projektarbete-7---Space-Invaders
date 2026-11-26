@@ -1,5 +1,6 @@
 interface IEnemy : IControls
 {
+    bool IsAlive { get; }
     void Advance();
     Bullet[] TryFire(ConsoleKey? key);
     Bullet[] FireTick();

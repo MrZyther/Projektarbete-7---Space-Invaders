@@ -13,7 +13,7 @@ class BasicEnemy : Enemy
         {
             return false;
         }
-        health = 0;
+        health--;
         return true;
     }
 }

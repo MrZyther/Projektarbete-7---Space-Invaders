@@ -9,9 +9,9 @@ class BlasterCannon : ICannon
 
         return
         [
-            new Bullet(left, -1, -1),
-            new Bullet(middle, 0, -1),
-            new Bullet(right, 1, -1)
+            new Bullet(left, -1, 1),
+            new Bullet(middle, 0, 1),
+            new Bullet(right, 1, 1)
         ];
     }
 
