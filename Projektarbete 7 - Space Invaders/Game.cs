@@ -14,44 +14,6 @@ class Game
             3,
             'U');
 
-        const int enemyColumns = 8;
-        const int enemyRows = 3;
-        Position[] positions = new Position[enemyColumns * enemyRows];
-        for (int row = 0; row < enemyRows; row++)
-        {
-            for (int column = 0; column < enemyColumns; column++)
-            {
-                int index = row * enemyColumns + column;
-                positions[index] = new Position(3 + column * 3, 2 + row * 2, width, height);
-            }
-        }
-
-        EnemyMovement enemyMovement = new EnemyMovement(positions);
-        IEnemy[] enemies = new IEnemy[positions.Length];
-        for (int row = 0; row < enemyRows; row++)
-        {
-            for (int column = 0; column < enemyColumns; column++)
-            {
-                int index = row * enemyColumns + column;
-                if (row == 0)
-                {
-                    enemies[index] = new BasicEnemy(
-                        enemyMovement, new RegularEnemyCannon(), positions[index], 1, 'b');
-                }
-                else if (row == 1)
-                {
-                    enemies[index] = new ArmoredEnemy(
-                        enemyMovement, new BlasterCannon(), positions[index], 3, 'a');
-                }
-                else
-                {
-                    enemies[index] = new RapidfireEnemy(
-                        enemyMovement, new RapidfireCannon(), positions[index], 2, 'x');
-                }
-            }
-        }
-
-        Wave wave = new Wave(enemies, enemyMovement);
         IControls playerControl = player;
         List<Bullet> playerBullets = [];
         List<Bullet> enemyBullets = [];
@@ -61,11 +23,9 @@ class Game
         Console.CursorVisible = false;
 
         bool running = true;
-        bool enemiesAlive = true;
         int frame = 0;
-        int nextEnemyToFire = 0;
 
-        while (running && player.IsAlive && enemiesAlive)
+        while (running && player.IsAlive)
         {
             ConsoleKey? key = Console.KeyAvailable
                 ? Console.ReadKey(intercept: true).Key
@@ -87,8 +47,7 @@ class Game
 
             if (frame % 20 == 0)
             {
-                enemyBullets.AddRange(enemies[nextEnemyToFire].TryFire(null));
-                nextEnemyToFire = (nextEnemyToFire + 1) % enemies.Length;
+                enemyBullets.AddRange(wave.TryFireNext());
             }
 
             enemyBullets.AddRange(wave.FireTick());
@@ -119,16 +78,6 @@ class Game
                 }
             }
 
-            enemiesAlive = false;
-            foreach (IEnemy enemy in enemies)
-            {
-                if (enemy.IsAlive)
-                {
-                    enemiesAlive = true;
-                    break;
-                }
-            }
-
             Console.SetCursorPosition(0, 0);
             wave.Draw(map);
             player.Draw(map);
@@ -144,7 +93,7 @@ class Game
             }
 
             map.CreateMap();
-            Console.Write($"Health: {player.Health} | Move: arrows | Shoot: Space | Quit: Esc");
+            Console.Write($"Wave: {wave.Number} | Health: {player.Health} | Move: arrows | Shoot: Space | Quit: Esc");
             Thread.Sleep(100);
             frame++;
         }
@@ -154,10 +103,6 @@ class Game
         if (!player.IsAlive)
         {
             Console.WriteLine("Game over.");
-        }
-        else if (!enemiesAlive)
-        {
-            Console.WriteLine("You win!");
         }
     }
 }
