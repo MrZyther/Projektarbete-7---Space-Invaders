@@ -27,14 +27,38 @@ class Ship : IControls
 
     public Bullet[] TryFire(ConsoleKey? key)
     {
+        if (health <= 0)
+        {
+            return [];
+        }
         return cannon.TryFire(position, key);
     }
 
-    public void DrawShip(Map map)
+    public void Draw(Map map)
     {
         if (health > 0)
         {
             position.Draw(map, symbol);
         }
+    }
+    public virtual bool TryHit(Bullet bullet, out Bullet[] response)
+    {
+        response = [];
+        if (health <= 0 || !bullet.Hits(position))
+        {
+            return false;
+        }
+
+        health--;
+        return true;
+    }
+    public virtual Bullet[] FireTick()
+    {
+        if (health <= 0)
+        {
+            return [];
+        }
+
+        return cannon.FireTick(position);
     }
 }

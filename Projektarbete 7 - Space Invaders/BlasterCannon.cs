@@ -14,4 +14,9 @@ class BlasterCannon : ICannon
             new Bullet(right, 1, -1)
         ];
     }
+
+    public Bullet[] FireTick(Position position)
+    {
+        return [];
+    }
 }

@@ -6,9 +6,9 @@ class BasicEnemy : Enemy
     }
     public override bool TryHit(
     Bullet bullet,
-    out Bullet? response)
+    out Bullet[] response)
     {
-        response = null;
+        response = [];
         if (health <= 0 || !bullet.Hits(position))
         {
             return false;
