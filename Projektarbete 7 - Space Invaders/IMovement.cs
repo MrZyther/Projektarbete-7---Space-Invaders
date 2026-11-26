@@ -1,4 +1,4 @@
 interface IMovement
 {
-    void Move(Position position);
+ void Move(Position position, ConsoleKey? key);
 }

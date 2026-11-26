@@ -1,11 +1,16 @@
-class PlayerMovement(KeyboardInput input) : IMovement
+class PlayerMovement : IMovement
 {
-    public void Move(Position position)
-    {
-        input.RunIfPressed(ConsoleKey.LeftArrow,
-        () => position.TryMove(-1, 0));
-        input.RunIfPressed(ConsoleKey.RightArrow,
-        () => position.TryMove(1, 0));
-
-    }
+ public static ConsoleKey? ReadKey()
+ {
+ if (Console.KeyAvailable)
+ return Console.ReadKey(intercept: true).Key;
+ return null;
+ }
+ public void Move(Position position, ConsoleKey? key)
+ {
+ if (key == ConsoleKey.LeftArrow)
+ position.TryMove(-1, 0);
+ else if (key == ConsoleKey.RightArrow)
+ position.TryMove(1, 0);
+ }
 }
