@@ -4,9 +4,4 @@ class Player : Ship
     : base(movement, cannon, position, health, symbol)
     {
     }
-
-    public void Draw (Map map)
-    {
-        base.DrawShip(map);
-    }
 }

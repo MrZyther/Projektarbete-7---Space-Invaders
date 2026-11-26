@@ -21,7 +21,7 @@ class Game
  positions[0], 1, 'E'),
  new ArmoredEnemy(enemyMovement, new BlasterCannon(),
  positions[1], 3, 'A'),
- new BasicEnemy(enemyMovement, new RapidfireCannon(),
+ new RapidfireEnemy(enemyMovement, new RapidfireCannon(),
  positions[2], 2, 'R')
         ];
         Wave wave = new Wave(enemies, enemyMovement);

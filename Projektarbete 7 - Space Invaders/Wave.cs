@@ -23,7 +23,17 @@ class Wave
             enemy.Draw(map);
         }
     }
-    public bool TryHit(Bullet bullet, out Bullet? response)
+    public Bullet[] FireTick()
+    {
+        List<Bullet> shots = [];
+        foreach (IEnemy enemy in enemies)
+        {
+            shots.AddRange(enemy.FireTick());
+        }
+        return shots.ToArray();
+    }
+
+    public bool TryHit(Bullet bullet, out Bullet[] response)
     {
         foreach (IEnemy enemy in enemies)
         {
@@ -32,7 +42,7 @@ class Wave
                 return true;
             }
         }
-        response = null;
+        response = [];
         return false;
     }
 }

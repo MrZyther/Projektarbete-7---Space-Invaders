@@ -4,4 +4,9 @@ class RegularEnemyCannon : ICannon
     {
         return [new Bullet(position, 0, 1)];
     }
+
+    public Bullet[] FireTick(Position position)
+    {
+        return [];
+    }
 }
