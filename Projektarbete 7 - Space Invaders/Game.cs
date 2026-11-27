@@ -40,9 +40,9 @@
         enemies[1] = new Enemy(enemyMovement, new RegularEnemyCannon(), formation[1], 1, 'E');
         enemies[2] = new Enemy(enemyMovement, new RegularEnemyCannon(), formation[2], 1, 'E');
 
-        enemies[3] = new ArmoredEnemy(enemyMovement, new BlasterCannon(), formation[3], 1, 'A');
-        enemies[4] = new ArmoredEnemy(enemyMovement, new BlasterCannon(), formation[4], 1, 'A');
-        enemies[5] = new ArmoredEnemy(enemyMovement, new BlasterCannon(), formation[5], 1, 'A');
+        enemies[3] = new ArmoredEnemy(enemyMovement, new BlasterCannon(), formation[3], 3, 'A');
+        enemies[4] = new ArmoredEnemy(enemyMovement, new BlasterCannon(), formation[4], 3, 'A');
+        enemies[5] = new ArmoredEnemy(enemyMovement, new BlasterCannon(), formation[5], 3, 'A');
 
         enemies[6] = new RapidfireEnemy(enemyMovement, new RapidfireCannon(), formation[6], 1, 'R');
         enemies[7] = new RapidfireEnemy(enemyMovement, new RapidfireCannon(), formation[7], 1, 'R');
