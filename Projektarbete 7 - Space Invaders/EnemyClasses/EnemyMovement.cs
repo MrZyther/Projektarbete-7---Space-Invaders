@@ -1,20 +1,14 @@
-class EnemyMovement : IControls
+class EnemyMovement(List<Position> formation) : IControls
 {
-    private readonly List<Position> formation;
     private int direction = 1;
     private bool dropping;
-
-    public EnemyMovement(List<Position> formation)
-    {
-        this.formation = formation;
-    }
 
     public void PrepareStep()
     {
         dropping = false;
         foreach (Position position in formation)
         {
-            if(!position.Copy().TryMove(direction,0))
+            if (!position.Copy().TryMove(direction, 0))
             {
                 direction = -direction;
                 dropping = true;
@@ -33,10 +27,5 @@ class EnemyMovement : IControls
         {
             position.TryMove(direction, 0);
         }
-    }
-
-    public void CompleteStep()
-    {
-        dropping = false;
     }
 }

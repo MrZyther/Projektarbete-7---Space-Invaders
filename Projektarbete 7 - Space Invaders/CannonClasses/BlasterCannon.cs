@@ -2,18 +2,15 @@ class BlasterCannon : ICannon
 {
     public Bullet[] TryFire(Position position, ConsoleKey? key)
     {
+        List<Bullet> shots = [];
+        for (int dx = -1; dx <= 1; dx++)
+        {
+            if (position.Copy().TryMove(dx, 1))
+            {
+                shots.Add(new Bullet(position, dx, 1));
+            }
+        }
 
-        Position left = position.Copy();
-        Position middle = position.Copy();
-        Position right = position.Copy();
-
-        return
-        [
-            new Bullet(left, -1, 1),
-            new Bullet(middle, 0, 1),
-            new Bullet(right, 1, 1)
-        ];
+        return shots.ToArray();
     }
-
-
 }

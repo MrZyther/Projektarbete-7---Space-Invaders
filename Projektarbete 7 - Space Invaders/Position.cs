@@ -13,12 +13,11 @@ class Position
         this.maxHeight = maxHeight;
     }
 
-    public bool TryMove(int dx, int dy) //dx och dy står för delta
+    public bool TryMove(int dx, int dy)
     {
-      int nextX = x + dx;
-      int nextY = y + dy;
-
-      if (nextX < 0 || nextX >= maxWidth || nextY < 0 || nextY >= maxHeight)
+        int nextX = x + dx;
+        int nextY = y + dy;
+        if (nextX < 0 || nextX >= maxWidth || nextY < 0 || nextY >= maxHeight)
         {
             return false;
         }
@@ -27,20 +26,24 @@ class Position
         y = nextY;
         return true;
     }
+
     public Position Copy()
     {
         return new Position(x, y, maxWidth, maxHeight);
     }
+
     public bool Overlaps(Position other)
     {
         return x == other.x && y == other.y;
     }
+
     public bool ReachedBottom()
     {
         return y == maxHeight - 1;
     }
+
     public void Draw(Map map, char symbol)
     {
-        map.SetPosition(x, y, symbol);
+        map.DrawAt(x, y, symbol);
     }
 }

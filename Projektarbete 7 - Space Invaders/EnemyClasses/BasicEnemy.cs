@@ -1,22 +1,11 @@
-class BasicEnemy : Enemy
+class BasicEnemy(IControls movement, ICannon cannon, Position position)
+    : Enemy(movement, cannon, position, 1, 'E')
 {
-    public BasicEnemy(IControls movement, ICannon cannon, Position position, int health, char symbol)
-     : base (movement, cannon, position, health, symbol)
+    public override void Act(ConsoleKey? key, List<Bullet> shots)
     {
-    }
-    public override bool TryHit(
-    Bullet bullet,
-    out Bullet[] response,
-    out bool destroyed)
-    {
-        response = [];
-        destroyed = false;
-        if (health <= 0 || !bullet.Hits(position))
+        if (Random.Shared.Next(25) == 0)
         {
-            return false;
+            base.Act(key, shots);
         }
-        health--;
-        destroyed = health == 0;
-        return true;
     }
 }

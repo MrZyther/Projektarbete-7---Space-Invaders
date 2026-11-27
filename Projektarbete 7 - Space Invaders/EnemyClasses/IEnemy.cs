@@ -1,7 +1,7 @@
-interface IEnemy : IControls
+interface IEnemy
 {
     void Advance();
-    Bullet[] TryFire(ConsoleKey? key);
+    void Act(ConsoleKey? key, List<Bullet> shots);
     void Draw(Map map);
-    bool TryHit(Bullet bullet, out Bullet[] response, out bool destroyed);
+    bool TryHit(Bullet bullet, out bool destroyed);
 }

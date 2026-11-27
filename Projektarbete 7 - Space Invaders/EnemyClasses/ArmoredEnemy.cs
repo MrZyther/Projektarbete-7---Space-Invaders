@@ -1,31 +1,25 @@
-class ArmoredEnemy : Enemy
+class ArmoredEnemy(IControls movement, ICannon cannon, Position position)
+    : Enemy(movement, cannon, position, 3, 'A')
 {
     private int hitsTaken;
 
-    public ArmoredEnemy(IControls movement, ICannon cannon, Position position, int health, char symbol)
-        : base(movement, cannon, position, health, symbol)
+    public override bool TryHit(Bullet bullet, out bool destroyed)
     {
-    }
-
-    public override Bullet[] TryFire(ConsoleKey? key)
-    {
-        return [];
-    }
-
-    public override bool TryHit(Bullet bullet, out Bullet[] response, out bool destroyed)
-    {
-        if (!base.TryHit(bullet, out response, out destroyed))
+        if (!base.TryHit(bullet, out destroyed))
         {
             return false;
         }
 
         hitsTaken++;
-        if (hitsTaken == 2 && health > 0)
+        return true;
+    }
+
+    public override void Act(ConsoleKey? key, List<Bullet> shots)
+    {
+        if (hitsTaken == 2)
         {
-            response = cannon.TryFire(position, null);
+            base.Act(key, shots);
             hitsTaken = 0;
         }
-
-        return true;
     }
 }

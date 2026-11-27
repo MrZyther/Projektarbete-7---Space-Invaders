@@ -1,24 +1,80 @@
-class Wave(int width, int height, Scoreboard scoreboard, List<Position> formation, IControls movement)
+class Wave
 {
-    public Target[] Create()
+    private const int MoveInterval = 5;
+    private readonly List<Position> formation = [];
+    private readonly List<Target> targets = [];
+    private readonly EnemyMovement movement;
+    private readonly Scoreboard scoreboard;
+    private int turnsUntilMove = MoveInterval;
+
+    public Wave(int width, int height, Scoreboard scoreboard)
     {
-        List<Target> targets = [];
-        for (int i = 0; i < 3; i++)
+        this.scoreboard = scoreboard;
+        movement = new EnemyMovement(formation);
+        for (int x = 5; x <= 15; x += 5)
         {
-            Position top = new(5 + i * 5, 3, width, height);
-            Position mid = new(5 + i * 5, 5, width, height);
-            Position low = new(5 + i * 5, 7, width, height);
+            Position top = new(x, 3, width, height);
+            Position mid = new(x, 5, width, height);
+            Position low = new(x, 7, width, height);
             formation.AddRange([top, mid, low]);
+            BasicEnemy regular = new(movement, new RegularEnemyCannon(), top);
+            ArmoredEnemy armored = new(movement, new BlasterCannon(), mid);
+            RapidfireEnemy rapid = new(movement, new RapidfireCannon(), low);
+            targets.Add(new Target(regular, top, 10));
+            targets.Add(new Target(armored, mid, 30));
+            targets.Add(new Target(rapid, low, 20));
+        }
+    }
 
-            Enemy regular = new(movement, new RegularEnemyCannon(), top, 1, 'E');
-            ArmoredEnemy armored = new(movement, new BlasterCannon(), mid, 3, 'A');
-            RapidfireEnemy rapid = new(movement, new RapidfireCannon(), low, 1, 'R');
+    public void TakeHits(List<Bullet> shots)
+    {
+        targets.RemoveAll(target =>
+            target.TryDestroy(shots, scoreboard, formation));
+    }
 
-            targets.Add(new(regular, top, 10, scoreboard, formation));
-            targets.Add(new(armored, mid, 30, scoreboard, formation));
-            targets.Add(new(rapid, low, 20, scoreboard, formation));
+    public void Advance()
+    {
+        turnsUntilMove--;
+        if (turnsUntilMove == 0)
+        {
+            movement.PrepareStep();
+            foreach (Target target in targets)
+            {
+                target.Advance();
+            }
+
+            turnsUntilMove = MoveInterval;
+        }
+    }
+
+    public void Fire(List<Bullet> shots)
+    {
+        foreach (Target target in targets)
+        {
+            target.Fire(shots);
+        }
+    }
+
+    public string CheckOutcome()
+    {
+        if (targets.Count == 0)
+        {
+            return "Alla fiender är borta. Du vann!";
         }
 
-        return targets.ToArray();
+        if (formation.Any(position => position.ReachedBottom()))
+        {
+            return "Fienderna nådde nedersta raden. Du förlorade!";
+        }
+
+        return "";
+    }
+
+    public void Draw(Map map)
+    {
+        foreach (Target target in targets)
+        {
+            target.Draw(map);
+        }
     }
 }

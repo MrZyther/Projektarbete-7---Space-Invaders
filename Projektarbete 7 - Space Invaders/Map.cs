@@ -1,28 +1,30 @@
 using System.Text;
 
-class Map (int width, int height)
+class Map(int width, int height)
 {
-    private readonly char[,] grid = new char [width, height];
+    private readonly char[,] grid = new char[width, height];
 
-    public void SetPosition(int x, int y, char symbol)
+    public void DrawAt(int x, int y, char symbol)
     {
         grid[x, y] = symbol;
     }
 
     public void CreateMap()
     {
-        for(int y = 0; y < height; y++)
+        StringBuilder frame = new();
+        for (int y = 0; y < height; y++)
         {
-            for(int x = 0; x < width; x++)
+            for (int x = 0; x < width; x++)
             {
                 char symbol = grid[x, y];
-                Console.Write(symbol== '\0' ? '.' : symbol);
-            
-                Console.Write(' ');
+                frame.Append(symbol == '\0' ? '.' : symbol);
+                frame.Append(' ');
             }
-            Console.WriteLine();
-        }
-        Array.Clear(grid);
 
+            frame.AppendLine();
+        }
+
+        Console.Write(frame);
+        Array.Clear(grid);
     }
 }

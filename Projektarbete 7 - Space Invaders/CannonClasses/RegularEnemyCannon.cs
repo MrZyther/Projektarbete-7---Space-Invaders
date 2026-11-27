@@ -4,6 +4,4 @@ class RegularEnemyCannon : ICannon
     {
         return [new Bullet(position, 0, 1)];
     }
-
-
 }

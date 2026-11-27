@@ -1,149 +1,48 @@
-    class Game
+class Game
 {
-    private const int EnemyMoveInterval = 5;
-    private readonly Map map;
-    private readonly Player player;
-    private readonly Position playerPosition;
-    private readonly List<Position> formation;
-    private readonly EnemyMovement enemyMovement;
-    private readonly IEnemy[] enemies;
-    private int turnsUntilEnemyMove = EnemyMoveInterval;
+    private const int Width = 20;
+    private const int Height = 15;
+    private readonly Map map = new(Width, Height);
+    private readonly Scoreboard scoreboard = new();
     private readonly List<Bullet> playerBullets = [];
     private readonly List<Bullet> enemyBullets = [];
-    private readonly Random random = new();
-    
+    private readonly Player player;
+    private readonly Wave wave;
+
     public Game()
     {
-        const int width = 20;
-        const int height = 15;
-        map = new Map(width, height);
-        playerPosition = new Position(width / 2, height - 1, width, height);
-        player = new Player(new PlayerMovement(), new PlayerCannon(), playerPosition, 3, 'P');
-
-        formation =
-        [
-            new(5, 3, width, height),
-            new(10, 3, width, height),
-            new(15, 3, width, height),
-            new(5, 5, width, height),
-            new(10, 5, width, height),
-            new(15, 5, width, height),
-            new(5, 7, width, height),
-            new(10, 7, width, height),
-            new(15, 7, width, height)
-        ];
-        enemyMovement = new EnemyMovement(formation);
-
-        enemies = new IEnemy[formation.Count];
-
-        enemies[0] = new Enemy(enemyMovement, new RegularEnemyCannon(), formation[0], 1, 'E');
-        enemies[1] = new Enemy(enemyMovement, new RegularEnemyCannon(), formation[1], 1, 'E');
-        enemies[2] = new Enemy(enemyMovement, new RegularEnemyCannon(), formation[2], 1, 'E');
-
-        enemies[3] = new ArmoredEnemy(enemyMovement, new BlasterCannon(), formation[3], 3, 'A');
-        enemies[4] = new ArmoredEnemy(enemyMovement, new BlasterCannon(), formation[4], 3, 'A');
-        enemies[5] = new ArmoredEnemy(enemyMovement, new BlasterCannon(), formation[5], 3, 'A');
-
-        enemies[6] = new RapidfireEnemy(enemyMovement, new RapidfireCannon(), formation[6], 1, 'R');
-        enemies[7] = new RapidfireEnemy(enemyMovement, new RapidfireCannon(), formation[7], 1, 'R');
-        enemies[8] = new RapidfireEnemy(enemyMovement, new RapidfireCannon(), formation[8], 1, 'R');
+        Position start = new(Width / 2, Height - 1, Width, Height);
+        player = new Player(new PlayerMovement(), new PlayerCannon(), start);
+        wave = new Wave(Width, Height, scoreboard);
     }
 
-    internal void Start()
+    public string PlayTurn(ConsoleKey? key)
     {
-        Console.Clear();
-        while (!formation.Any(position => position.ReachedBottom()))
-        {
-            ConsoleKey? key = Console.KeyAvailable
-                ? Console.ReadKey(intercept: true).Key
-                : null;
-
-            if (key == ConsoleKey.Escape)
-            {
-                return;
-            }
-
-            RunTurn(key);
-            Draw();
-            Thread.Sleep(60);
-        }
-
-        Console.WriteLine("Fienderna nådde nedersta raden.");
-    }
-
-    private void RunTurn(ConsoleKey? key)
-    {
-        player.Move(playerPosition, key);
-
-        playerBullets.AddRange(player.TryFire(key));
+        player.Act(key, playerBullets);
         playerBullets.RemoveAll(bullet => !bullet.Move());
-        RemoveHitBullets();
-
-        enemyBullets.RemoveAll(bullet => !bullet.Move());
-        EnemyFire();
-        
-        turnsUntilEnemyMove--;
-
-        if (turnsUntilEnemyMove > 0)
+        wave.TakeHits(playerBullets);
+        wave.Advance();
+        wave.TakeHits(playerBullets);
+        wave.Fire(enemyBullets);
+        if (!player.Survives(enemyBullets))
         {
-            return;
+            return "Ditt skepp förstördes. Du förlorade!";
         }
 
-        enemyMovement.PrepareStep();
-        foreach (IEnemy enemy in enemies)
-        {
-            enemy.Advance();
-        }
-
-        enemyMovement.CompleteStep();
-        turnsUntilEnemyMove = EnemyMoveInterval;
-        RemoveHitBullets();
+        return wave.CheckOutcome();
     }
 
-    private void RemoveHitBullets()
+    public void Draw()
     {
-        foreach (Bullet bullet in playerBullets.ToArray())
+        foreach (Bullet bullet in playerBullets.Concat(enemyBullets))
         {
-            foreach (IEnemy enemy in enemies)
-            {
-                if (enemy.TryHit(bullet, out Bullet[] response, out _))
-                {
-                    enemyBullets.AddRange(response);
-                    playerBullets.Remove(bullet);
-                    break;
-                }
-            }
+            bullet.Render(map);
         }
-    }
 
-    private void Draw()
-    {
-        Console.SetCursorPosition(0, 0);
+        wave.Draw(map);
         player.Draw(map);
-
-        foreach (IEnemy enemy in enemies)
-        {
-            enemy.Draw(map);
-        }
-        foreach (Bullet bullet in playerBullets)
-        {
-            bullet.Render(map);
-        }
-        foreach (Bullet bullet in enemyBullets)
-        {
-            bullet.Render(map);
-        }
+        Console.SetCursorPosition(0, 0);
         map.CreateMap();
+        scoreboard.Draw();
     }
-
-    public void EnemyFire()
-    {
-        foreach (IEnemy enemy in enemies)
-        {
-            if (random.Next(25) == 0)
-            {
-                enemyBullets.AddRange(enemy.TryFire(null));
-            }
-        }
-}
 }

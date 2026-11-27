@@ -1,48 +1,18 @@
-class Ship : IControls
+abstract class Ship(
+    IControls movement,
+    ICannon cannon,
+    Position position,
+    int health,
+    char symbol)
 {
-    private readonly IControls movement;
-    protected readonly ICannon cannon;
-    protected readonly Position position;
-    private readonly char symbol;
-    protected int health;
-
-    public Ship(
-        IControls movement,
-        ICannon cannon,
-        Position position,
-        int health,
-        char symbol)
+    protected void Move(ConsoleKey? key)
     {
-        this.movement = movement;
-        this.cannon = cannon;
-        this.position = position;
-        this.health = health;
-        this.symbol = symbol;
+        movement.Move(position, key);
     }
 
-    public void Move(Position target, ConsoleKey? key)
+    public virtual void Act(ConsoleKey? key, List<Bullet> shots)
     {
-        movement.Move(target, key);
-    }
-
-    public void Advance()
-    {
-       if (health <= 0)
-        {
-            return;
-        }
-       
-        movement.Move(position, null);
-    }
-
-    public virtual Bullet[] TryFire(ConsoleKey? key)
-    {
-        if (health <= 0)
-        {
-            return [];
-        }
-
-        return cannon.TryFire(position, key);
+        shots.AddRange(cannon.TryFire(position, key));
     }
 
     public void Draw(Map map)
@@ -53,11 +23,10 @@ class Ship : IControls
         }
     }
 
-    public virtual bool TryHit(Bullet bullet, out Bullet[] response, out bool destroyed)
+    public virtual bool TryHit(Bullet bullet, out bool destroyed)
     {
-        response = [];
         destroyed = false;
-        if (health <= 0 || !bullet.Hits(position))
+        if (health == 0 || !bullet.Hits(position))
         {
             return false;
         }

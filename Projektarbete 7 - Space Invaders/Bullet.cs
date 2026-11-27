@@ -9,18 +9,7 @@ class Bullet(Position start, int dx = 0, int dy = -1)
 
     public void Render(Map map)
     {
-       char symbol;
-
-        if (dy < 0)
-        {
-         symbol = '|';
-        }
-        else
-        {
-            symbol = '!';
-        }
-
-        position.Draw(map, symbol);
+        position.Draw(map, dy < 0 ? '|' : '!');
     }
 
     public bool Hits(Position target)

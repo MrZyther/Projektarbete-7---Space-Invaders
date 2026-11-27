@@ -1,19 +1,23 @@
-class Target(IEnemy enemy, Position position, int points, Scoreboard scoreboard, List<Position> formation)
+class Target(IEnemy enemy, Position position, int points)
 {
-    public bool TryHit(Bullet bullet, out Bullet[] response)
+    public bool TryDestroy(
+        List<Bullet> shots, Scoreboard scoreboard, List<Position> formation)
     {
-        if (!enemy.TryHit(bullet, out response, out bool destroyed))
+        for (int i = shots.Count - 1; i >= 0; i--)
         {
-            return false;
+            if (enemy.TryHit(shots[i], out bool destroyed))
+            {
+                shots.RemoveAt(i);
+                if (destroyed)
+                {
+                    formation.Remove(position);
+                    scoreboard.AddPoints(points);
+                    return true;
+                }
+            }
         }
 
-        if (destroyed)
-        {
-            formation.Remove(position);
-            scoreboard.AddPoints(points);
-        }
-
-        return true;
+        return false;
     }
 
     public void Advance()
@@ -26,9 +30,8 @@ class Target(IEnemy enemy, Position position, int points, Scoreboard scoreboard,
         enemy.Draw(map);
     }
 
-    public Bullet[] TryFire()
+    public void Fire(List<Bullet> shots)
     {
-        return enemy.TryFire(null);
+        enemy.Act(null, shots);
     }
-
 }

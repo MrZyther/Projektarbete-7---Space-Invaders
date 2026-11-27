@@ -1,7 +1,10 @@
-class Enemy : Ship, IEnemy
+abstract class Enemy(
+    IControls movement, ICannon cannon, Position position,
+    int health, char symbol)
+    : Ship(movement, cannon, position, health, symbol), IEnemy
 {
-    public Enemy(IControls movement, ICannon cannon, Position position, int health, char symbol)
-    : base(movement, cannon, position, health, symbol)
-    {   
+    public void Advance()
+    {
+        base.Move(null);
     }
 }
