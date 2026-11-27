@@ -5,9 +5,7 @@ class Ship : IControls
     protected readonly Position position;
     protected readonly char symbol;
     protected int health;
-
-    public bool IsAlive => health > 0;
-    public int Health => health;
+    
 
     public Ship(IControls movement, ICannon cannon, Position position, int health, char symbol)
     {

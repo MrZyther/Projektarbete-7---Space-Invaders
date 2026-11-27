@@ -9,9 +9,6 @@
     private readonly IEnemy[] enemies;
     private int turnsUntilEnemyMove = EnemyMoveInterval;
     private readonly List<Bullet> playerBullets = [];
-    private readonly List<Bullet> enemyBullets = [];
-    private readonly Random random = new();
-    
 
 
 
@@ -23,33 +20,16 @@
         playerPosition = new Position(width / 2, height - 1, width, height);
         player = new Player(new PlayerMovement(), new PlayerCannon(), playerPosition, 3, 'P');
 
-        formation =
-        [
-            new(5, 3, width, height),
-            new(10, 3, width, height),
-            new(15, 3, width, height),
-            new(5, 5, width, height),
-            new(10, 5, width, height),
-            new(15, 5, width, height),
-            new(5, 7, width, height),
-            new(10, 7, width, height),
-            new(15, 7, width, height)
-        ];
+        formation = [new(5, 5, width, height), new(10, 5, width, height)];
         enemyMovement = new EnemyMovement(formation);
 
         enemies = new IEnemy[formation.Length];
 
-        enemies[0] = new Enemy(enemyMovement, new RegularEnemyCannon(), formation[0], 1, 'E');
-        enemies[1] = new Enemy(enemyMovement, new RegularEnemyCannon(), formation[1], 1, 'E');
-        enemies[2] = new Enemy(enemyMovement, new RegularEnemyCannon(), formation[2], 1, 'E');
+        Enemy enemy = new Enemy(enemyMovement, new BlasterCannon(), formation[0], 1, 'E');
+        Enemy enemy2 = new Enemy(enemyMovement, new RegularEnemyCannon(), formation[1], 1, 'E');
 
-        enemies[3] = new ArmoredEnemy(enemyMovement, new BlasterCannon(), formation[3], 1, 'A');
-        enemies[4] = new ArmoredEnemy(enemyMovement, new BlasterCannon(), formation[4], 1, 'A');
-        enemies[5] = new ArmoredEnemy(enemyMovement, new BlasterCannon(), formation[5], 1, 'A');
-
-        enemies[6] = new RapidfireEnemy(enemyMovement, new RapidfireCannon(), formation[6], 1, 'R');
-        enemies[7] = new RapidfireEnemy(enemyMovement, new RapidfireCannon(), formation[7], 1, 'R');
-        enemies[8] = new RapidfireEnemy(enemyMovement, new RapidfireCannon(), formation[8], 1, 'R');
+        enemies[0] = enemy;
+        enemies[1] = enemy2;
     }
 
     internal void Start()
@@ -81,11 +61,7 @@
 
         playerBullets.AddRange(player.TryFire(key));
         playerBullets.RemoveAll(bullet => !bullet.Move());
-        RemoveHitBullets();
 
-        enemyBullets.RemoveAll(bullet => !bullet.Move());
-        EnemyFire();
-        
         turnsUntilEnemyMove--;
 
         if (turnsUntilEnemyMove > 0)
@@ -101,22 +77,6 @@
 
         enemyMovement.CompleteStep();
         turnsUntilEnemyMove = EnemyMoveInterval;
-        RemoveHitBullets();
-    }
-
-    private void RemoveHitBullets()
-    {
-        foreach (Bullet bullet in playerBullets.ToArray())
-        {
-            foreach (IEnemy enemy in enemies)
-            {
-                if (enemy.TryHit(bullet, out _))
-                {
-                    playerBullets.Remove(bullet);
-                    break;
-                }
-            }
-        }
     }
 
     private void Draw()
@@ -132,23 +92,6 @@
         {
             bullet.Render(map);
         }
-        foreach (Bullet bullet in enemyBullets)
-        {
-            bullet.Render(map);
-        }
         map.CreateMap();
     }
-
-    private void EnemyFire()
-    {
-
-    foreach (IEnemy enemy in enemies)
-    {
-        if (enemy.IsAlive && random.Next(25) == 0)
-        {
-            enemyBullets.AddRange(enemy.TryFire(null));
-        }
-    }
-    }
 }
-

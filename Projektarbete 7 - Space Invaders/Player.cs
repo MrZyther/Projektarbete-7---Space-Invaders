@@ -4,14 +4,4 @@ class Player : Ship
     : base(movement, cannon, position, health, symbol)
     {
     }
-    public bool TryHit(Bullet bullet)
-    {
-        if (!IsAlive || !bullet.Hits(position))
-        {
-            return false;
-        }
-
-        health--;
-        return true;
-    }
 }
