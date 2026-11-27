@@ -1,31 +1,38 @@
-class Game
+    class Game
 {
-    public void Start()
+    private const int EnemyMoveInterval = 5;
+    private readonly Map map;
+    private readonly Player player;
+    private readonly Position playerPosition;
+    private readonly Position[] formation;
+    private readonly EnemyMovement enemyMovement;
+    private readonly IEnemy[] enemies;
+    private int turnsUntilEnemyMove = EnemyMoveInterval;
+
+    public Game()
     {
-        const int width = 28;
+        const int width = 20;
         const int height = 15;
+        map = new Map(width, height);
+        playerPosition = new Position(width / 2, height - 1, width, height);
+        player = new Player(new PlayerMovement(), new PlayerCannon(), playerPosition, 3, 'P');
 
-        Map map = new Map(width, height);
-        Position playerPosition = new Position(width / 2, height - 1, width, height);
-        Player player = new Player(
-            new PlayerMovement(),
-            new PlayerCannon(),
-            playerPosition,
-            3,
-            'U');
+        formation = [new(5, 5, width, height), new(10, 5, width, height)];
+        enemyMovement = new EnemyMovement(formation);
 
-        IControls playerControl = player;
-        List<Bullet> playerBullets = [];
-        List<Bullet> enemyBullets = [];
+        enemies = new IEnemy[formation.Length];
 
-        bool cursorVisible = Console.CursorVisible;
+        Enemy enemy = new Enemy(enemyMovement, new BlasterCannon(), formation[0], 1, 'E');
+        Enemy enemy2 = new Enemy(enemyMovement, new RegularEnemyCannon(), formation[1], 1, 'E');
+
+        enemies[0] = enemy;
+        enemies[1] = enemy2;
+    }
+
+    internal void Start()
+    {
         Console.Clear();
-        Console.CursorVisible = false;
-
-        bool running = true;
-        int frame = 0;
-
-        while (running && player.IsAlive)
+        while (!formation.Any(position => position.ReachedBottom()))
         {
             ConsoleKey? key = Console.KeyAvailable
                 ? Console.ReadKey(intercept: true).Key
@@ -33,76 +40,47 @@ class Game
 
             if (key == ConsoleKey.Escape)
             {
-                running = false;
-                continue;
+                return;
             }
 
-            playerControl.Move(playerPosition, key);
-            playerBullets.AddRange(player.TryFire(key));
-
-            if (frame % 5 == 0)
-            {
-                wave.Advance();
-            }
-
-            if (frame % 20 == 0)
-            {
-                enemyBullets.AddRange(wave.TryFireNext());
-            }
-
-            enemyBullets.AddRange(wave.FireTick());
-
-            for (int i = playerBullets.Count - 1; i >= 0; i--)
-            {
-                Bullet bullet = playerBullets[i];
-                bool removeBullet = !bullet.Move();
-
-                if (!removeBullet && wave.TryHit(bullet, out Bullet[] response))
-                {
-                    removeBullet = true;
-                    enemyBullets.AddRange(response);
-                }
-
-                if (removeBullet)
-                {
-                    playerBullets.RemoveAt(i);
-                }
-            }
-
-            for (int i = enemyBullets.Count - 1; i >= 0; i--)
-            {
-                Bullet bullet = enemyBullets[i];
-                if (!bullet.Move() || player.TryHit(bullet))
-                {
-                    enemyBullets.RemoveAt(i);
-                }
-            }
-
-            Console.SetCursorPosition(0, 0);
-            wave.Draw(map);
-            player.Draw(map);
-
-            foreach (Bullet bullet in playerBullets)
-            {
-                bullet.Render(map);
-            }
-
-            foreach (Bullet bullet in enemyBullets)
-            {
-                bullet.Render(map);
-            }
-
-            map.CreateMap();
-            Console.Write($"Wave: {wave.Number} | Health: {player.Health} | Move: arrows | Shoot: Space | Quit: Esc");
-            Thread.Sleep(100);
-            frame++;
+            RunTurn(key);
+            Draw();
+            Thread.Sleep(60);
         }
 
-        Console.CursorVisible = cursorVisible;
-        Console.WriteLine();
-        if (!player.IsAlive)
+        Console.WriteLine("Fienderna nådde nedersta raden.");
+    }
+
+    private void RunTurn(ConsoleKey? key)
+    {
+        player.Move(playerPosition, key);
+        turnsUntilEnemyMove--;
+
+        if (turnsUntilEnemyMove > 0)
         {
-            Console.WriteLine("Game over.");
+            return;
         }
+
+        enemyMovement.PrepareStep();
+        foreach (IEnemy enemy in enemies)
+        {
+            enemy.Advance();
+        }
+
+        enemyMovement.CompleteStep();
+        turnsUntilEnemyMove = EnemyMoveInterval;
+    }
+
+    private void Draw()
+    {
+        Console.SetCursorPosition(0, 0);
+        player.Draw(map);
+
+        foreach (IEnemy enemy in enemies)
+        {
+            enemy.Draw(map);
+        }
+
+        map.CreateMap();
     }
 }
