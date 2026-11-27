@@ -45,7 +45,7 @@
 
             RunTurn(key);
             Draw();
-            Thread.Sleep(100);
+            Thread.Sleep(105);
         }
 
         Console.WriteLine("Fienderna nådde nedersta raden.");
