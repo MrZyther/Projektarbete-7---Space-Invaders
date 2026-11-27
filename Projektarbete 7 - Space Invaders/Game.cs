@@ -77,6 +77,18 @@
 
         enemyMovement.CompleteStep();
         turnsUntilEnemyMove = EnemyMoveInterval;
+
+        foreach (Bullet bullet in playerBullets.ToArray())
+        {
+            foreach(IEnemy enemy in enemies)
+            {
+                if (enemy.TryHit(bullet, out _))
+                {
+                    playerBullets.Remove(bullet);
+                    break;
+                }
+            }
+        }
     }
 
     private void Draw()
