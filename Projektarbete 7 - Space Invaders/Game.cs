@@ -47,6 +47,7 @@
             }
 
             RunTurn(key);
+            playerBullets.RemoveAll(bullet => enemies.Any(enemy => enemy.TryHit(bullet, out _)));
             Draw();
             Thread.Sleep(60);
         }
@@ -60,7 +61,7 @@
 
         playerBullets.AddRange(player.TryFire(key));
         playerBullets.RemoveAll(bullet => !bullet.Move());
-        
+
         turnsUntilEnemyMove--;
 
         if (turnsUntilEnemyMove > 0)
