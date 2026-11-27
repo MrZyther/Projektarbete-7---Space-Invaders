@@ -8,6 +8,9 @@
     private readonly EnemyMovement enemyMovement;
     private readonly IEnemy[] enemies;
     private int turnsUntilEnemyMove = EnemyMoveInterval;
+    private readonly List<Bullet> playerBullets = [];
+
+
 
     public Game()
     {
@@ -45,7 +48,7 @@
 
             RunTurn(key);
             Draw();
-            Thread.Sleep(105);
+            Thread.Sleep(60);
         }
 
         Console.WriteLine("Fienderna nådde nedersta raden.");
@@ -54,6 +57,10 @@
     private void RunTurn(ConsoleKey? key)
     {
         player.Move(playerPosition, key);
+
+        playerBullets.AddRange(player.TryFire(key));
+        playerBullets.RemoveAll(bullet => !bullet.Move());
+        
         turnsUntilEnemyMove--;
 
         if (turnsUntilEnemyMove > 0)
@@ -80,7 +87,10 @@
         {
             enemy.Draw(map);
         }
-
+        foreach (Bullet bullet in playerBullets)
+        {
+            bullet.Render(map);
+        }
         map.CreateMap();
     }
 }

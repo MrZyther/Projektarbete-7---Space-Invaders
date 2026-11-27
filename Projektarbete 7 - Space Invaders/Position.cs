@@ -27,15 +27,15 @@ class Position
         y = nextY;
         return true;
     }
-     public Position Copy()
+    public Position Copy()
     {
         return new Position(x, y, maxWidth, maxHeight);
     }
-     public bool Overlaps(Position other)
+    public bool Overlaps(Position other)
     {
         return x == other.x && y == other.y;
     }
-     public bool ReachedBottom()
+    public bool ReachedBottom()
     {
         return y == maxHeight - 1;
     }
