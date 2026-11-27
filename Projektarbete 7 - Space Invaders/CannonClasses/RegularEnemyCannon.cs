@@ -1,4 +1,4 @@
-class RegularEnemyCannon : ICannon
+internal sealed class RegularEnemyCannon : ICannon
 {
     public Bullet[] TryFire(Position position, ConsoleKey? key)
     {

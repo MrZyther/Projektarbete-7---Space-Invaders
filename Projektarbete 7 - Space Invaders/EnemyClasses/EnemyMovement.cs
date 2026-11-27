@@ -1,19 +1,20 @@
-class EnemyMovement(List<Position> formation) : IControls
+internal sealed class EnemyMovement : IControls
 {
     private int direction = 1;
     private bool dropping;
 
-    public void PrepareStep()
+    internal void StartWave()
     {
+        direction = 1;
         dropping = false;
-        foreach (Position position in formation)
+    }
+
+    internal void PrepareStep(IEnumerable<Enemy> enemies)
+    {
+        dropping = enemies.Any(enemy => enemy.ReachedSide(direction));
+        if (dropping)
         {
-            if (!position.Copy().TryMove(direction, 0))
-            {
-                direction = -direction;
-                dropping = true;
-                break;
-            }
+            direction = -direction;
         }
     }
 

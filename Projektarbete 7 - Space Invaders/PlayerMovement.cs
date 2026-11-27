@@ -1,4 +1,4 @@
-class PlayerMovement : IControls
+internal sealed class PlayerMovement : IControls
 {
     public void Move(Position position, ConsoleKey? key)
     {

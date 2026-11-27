@@ -1,15 +1,15 @@
 using System.Text;
 
-class Map(int width, int height)
+internal sealed class Map(int width, int height)
 {
     private readonly char[,] grid = new char[width, height];
 
-    public void DrawAt(int x, int y, char symbol)
+    internal void DrawAt(int x, int y, char symbol)
     {
         grid[x, y] = symbol;
     }
 
-    public void CreateMap()
+    internal void CreateMap()
     {
         StringBuilder frame = new();
         for (int y = 0; y < height; y++)

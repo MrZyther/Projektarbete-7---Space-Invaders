@@ -1,37 +1,36 @@
-class Target(IEnemy enemy, Position position, int points)
+internal sealed class Target(Ship defender)
 {
-    public bool TryDestroy(
-        List<Bullet> shots, Scoreboard scoreboard, List<Position> formation)
+    private readonly List<Bullet> incoming = [];
+
+    internal void ReceiveFire(IEnumerable<IEnemy> attackers)
     {
-        for (int i = shots.Count - 1; i >= 0; i--)
+        foreach (IEnemy attacker in attackers)
         {
-            if (enemy.TryHit(shots[i], out bool destroyed))
-            {
-                shots.RemoveAt(i);
-                if (destroyed)
-                {
-                    formation.Remove(position);
-                    scoreboard.AddPoints(points);
-                    return true;
-                }
-            }
+            // FALL #3:
+            // VAD: Arv och beroendeinjektion av tre fiendetyper.
+            // HUR: Metoden får fienderna utifrån. De ärver Move och Draw,
+            // men skriver över Act med slump, svar på skada eller nedräkning.
+            // VARFÖR: Alla kan beskjuta samma mål med olika anfallsmönster.
+            attacker.Act(null, incoming);
         }
-
-        return false;
     }
 
-    public void Advance()
+    internal void AdvanceShots()
     {
-        enemy.Advance();
+        incoming.RemoveAll(bullet => defender.TryHit(bullet)
+            || !bullet.Move() || defender.TryHit(bullet));
     }
 
-    public void Draw(Map map)
+    internal void ClearShots()
     {
-        enemy.Draw(map);
+        incoming.Clear();
     }
 
-    public void Fire(List<Bullet> shots)
+    internal void DrawShots(Map map)
     {
-        enemy.Act(null, shots);
+        foreach (Bullet bullet in incoming)
+        {
+            bullet.Render(map);
+        }
     }
 }

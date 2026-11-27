@@ -1,4 +1,4 @@
-class RapidfireCannon : ICannon
+internal sealed class RapidfireCannon : ICannon
 {
     public Bullet[] TryFire(Position position, ConsoleKey? key)
     {

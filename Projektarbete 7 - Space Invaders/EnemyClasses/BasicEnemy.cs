@@ -1,4 +1,5 @@
-class BasicEnemy(IControls movement, ICannon cannon, Position position)
+internal sealed class BasicEnemy(
+    IControls movement, ICannon cannon, Position position)
     : Enemy(movement, cannon, position, 1, 'E')
 {
     public override void Act(ConsoleKey? key, List<Bullet> shots)

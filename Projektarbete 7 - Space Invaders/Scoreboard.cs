@@ -1,14 +1,20 @@
-class Scoreboard
+internal sealed class Scoreboard
 {
     private int score;
+    private int waveNumber;
 
-    public void AddPoints(int points)
+    internal void StartWave()
+    {
+        waveNumber++;
+    }
+
+    internal void AddPoints(int points)
     {
         score += points;
     }
 
-    public void Draw()
+    internal void Draw()
     {
-        Console.WriteLine($"Poäng: {score}");
+        Console.WriteLine($"Våg: {waveNumber}   Poäng: {score}");
     }
 }

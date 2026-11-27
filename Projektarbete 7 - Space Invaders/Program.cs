@@ -1,26 +1,23 @@
-Console.CursorVisible = false;
-Game game = new();
 Console.Clear();
-
+Game game = new();
+Console.CursorVisible = false;
 try
 {
-    game.Draw();
     string result = "";
     while (result == "")
     {
+        game.Draw();
         Thread.Sleep(60);
         ConsoleKey? key = Console.KeyAvailable
-            ? Console.ReadKey(intercept: true).Key
-            : null;
+            ? Console.ReadKey(true).Key : null;
         if (key == ConsoleKey.Escape)
         {
-            break;
+            return;
         }
-
-        result = game.PlayTurn(key);
-        game.Draw();
+        game.PlayTurn(key);
+        result = game.FinishTurn();
     }
-
+    game.Draw();
     Console.WriteLine(result);
 }
 finally

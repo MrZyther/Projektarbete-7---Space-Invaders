@@ -1,4 +1,5 @@
-class RapidfireEnemy(IControls movement, ICannon cannon, Position position)
+internal sealed class RapidfireEnemy(
+    IControls movement, ICannon cannon, Position position)
     : Enemy(movement, cannon, position, 1, 'R')
 {
     private int turnsUntilShot = Random.Shared.Next(15, 41);
