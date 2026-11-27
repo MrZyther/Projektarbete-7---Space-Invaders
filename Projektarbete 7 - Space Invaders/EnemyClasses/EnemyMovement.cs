@@ -1,10 +1,10 @@
 class EnemyMovement : IControls
 {
-    private readonly Position[] formation;
+    private readonly List<Position> formation;
     private int direction = 1;
     private bool dropping;
 
-    public EnemyMovement(Position[] formation)
+    public EnemyMovement(List<Position> formation)
     {
         this.formation = formation;
     }

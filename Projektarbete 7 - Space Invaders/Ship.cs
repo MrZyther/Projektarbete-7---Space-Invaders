@@ -27,6 +27,11 @@ class Ship : IControls
 
     public void Advance()
     {
+       if (health <= 0)
+        {
+            return;
+        }
+       
         movement.Move(position, null);
     }
 
@@ -48,15 +53,17 @@ class Ship : IControls
         }
     }
 
-    public virtual bool TryHit(Bullet bullet, out Bullet[] response)
+    public virtual bool TryHit(Bullet bullet, out Bullet[] response, out bool destroyed)
     {
         response = [];
+        destroyed = false;
         if (health <= 0 || !bullet.Hits(position))
         {
             return false;
         }
 
         health--;
+        destroyed = health == 0;
         return true;
     }
 }

@@ -2,12 +2,7 @@ class ArmoredEnemy : Enemy
 {
     private int hitsTaken;
 
-    public ArmoredEnemy(
-        IControls movement,
-        ICannon cannon,
-        Position position,
-        int health,
-        char symbol)
+    public ArmoredEnemy(IControls movement, ICannon cannon, Position position, int health, char symbol)
         : base(movement, cannon, position, health, symbol)
     {
     }
@@ -17,9 +12,9 @@ class ArmoredEnemy : Enemy
         return [];
     }
 
-    public override bool TryHit(Bullet bullet, out Bullet[] response)
+    public override bool TryHit(Bullet bullet, out Bullet[] response, out bool destroyed)
     {
-        if (!base.TryHit(bullet, out response))
+        if (!base.TryHit(bullet, out response, out destroyed))
         {
             return false;
         }

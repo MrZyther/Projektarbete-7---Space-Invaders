@@ -4,7 +4,7 @@
     private readonly Map map;
     private readonly Player player;
     private readonly Position playerPosition;
-    private readonly Position[] formation;
+    private readonly List<Position> formation;
     private readonly EnemyMovement enemyMovement;
     private readonly IEnemy[] enemies;
     private int turnsUntilEnemyMove = EnemyMoveInterval;
@@ -34,7 +34,7 @@
         ];
         enemyMovement = new EnemyMovement(formation);
 
-        enemies = new IEnemy[formation.Length];
+        enemies = new IEnemy[formation.Count];
 
         enemies[0] = new Enemy(enemyMovement, new RegularEnemyCannon(), formation[0], 1, 'E');
         enemies[1] = new Enemy(enemyMovement, new RegularEnemyCannon(), formation[1], 1, 'E');
@@ -106,7 +106,7 @@
         {
             foreach (IEnemy enemy in enemies)
             {
-                if (enemy.TryHit(bullet, out Bullet[] response))
+                if (enemy.TryHit(bullet, out Bullet[] response, out _))
                 {
                     enemyBullets.AddRange(response);
                     playerBullets.Remove(bullet);

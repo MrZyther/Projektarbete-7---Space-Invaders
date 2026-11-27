@@ -6,14 +6,17 @@ class BasicEnemy : Enemy
     }
     public override bool TryHit(
     Bullet bullet,
-    out Bullet[] response)
+    out Bullet[] response,
+    out bool destroyed)
     {
         response = [];
+        destroyed = false;
         if (health <= 0 || !bullet.Hits(position))
         {
             return false;
         }
         health--;
+        destroyed = health == 0;
         return true;
     }
 }
