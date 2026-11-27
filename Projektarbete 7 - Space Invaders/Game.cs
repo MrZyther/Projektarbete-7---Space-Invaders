@@ -25,8 +25,13 @@
 
         enemies = new IEnemy[formation.Length];
 
-        Enemy enemy = new Enemy(enemyMovement, new BlasterCannon(), formation[0], 1, 'E');
-        Enemy enemy2 = new Enemy(enemyMovement, new RegularEnemyCannon(), formation[1], 1, 'E');
+        enemies[0] = new Enemy(enemyMovement, new RegularEnemyCannon(), formation[0], 1, 'E');
+        enemies[1] = new Enemy(enemyMovement, new RegularEnemyCannon(), formation[1], 1, 'E');
+        enemies[2] = new Enemy(enemyMovement, new RegularEnemyCannon(), formation[2], 1, 'E');
+
+        enemies[3] = new ArmoredEnemy(enemyMovement, new BlasterCannon(), formation[3], 1, 'A');
+        enemies[4] = new ArmoredEnemy(enemyMovement, new BlasterCannon(), formation[4], 1, 'A');
+        enemies[5] = new ArmoredEnemy(enemyMovement, new BlasterCannon(), formation[5], 1, 'A');
 
         enemies[0] = enemy;
         enemies[1] = enemy2;
