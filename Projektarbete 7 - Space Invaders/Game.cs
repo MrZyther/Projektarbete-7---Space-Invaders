@@ -9,6 +9,9 @@
     private readonly IEnemy[] enemies;
     private int turnsUntilEnemyMove = EnemyMoveInterval;
     private readonly List<Bullet> playerBullets = [];
+    private readonly List<Bullet> enemyBullets = [];
+    private readonly Random random = new();
+    
 
 
 
@@ -79,6 +82,9 @@
         playerBullets.AddRange(player.TryFire(key));
         playerBullets.RemoveAll(bullet => !bullet.Move());
         RemoveHitBullets();
+
+        enemyBullets.RemoveAll(bullet => !bullet.Move());
+        EnemyFire();
         
         turnsUntilEnemyMove--;
 
@@ -126,6 +132,23 @@
         {
             bullet.Render(map);
         }
+        foreach (Bullet bullet in enemyBullets)
+        {
+            bullet.Render(map);
+        }
         map.CreateMap();
     }
+
+    private void EnemyFire()
+    {
+
+    foreach (IEnemy enemy in enemies)
+    {
+        if (enemy.IsAlive && random.Next(25) == 0)
+        {
+            enemyBullets.AddRange(enemy.TryFire(null));
+        }
+    }
+    }
 }
+
