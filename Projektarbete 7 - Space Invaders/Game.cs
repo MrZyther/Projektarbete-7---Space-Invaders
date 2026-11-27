@@ -64,6 +64,7 @@
             }
 
             RunTurn(key);
+            playerBullets.RemoveAll(bullet => enemies.Any(enemy => enemy.TryHit(bullet, out _)));
             Draw();
             Thread.Sleep(60);
         }
