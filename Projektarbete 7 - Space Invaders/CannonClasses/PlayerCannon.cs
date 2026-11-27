@@ -9,8 +9,4 @@ class PlayerCannon : ICannon
         return [];
     }
 
-    public Bullet[] FireTick(Position position)
-    {
-        return [];
-    }
 }

@@ -55,13 +55,6 @@ class Ship : IControls
         health--;
         return true;
     }
-    public virtual Bullet[] FireTick()
-    {
-        if (health <= 0)
-        {
-            return [];
-        }
 
-        return cannon.FireTick(position);
-    }
+    
 }
