@@ -13,14 +13,5 @@ class RapidfireCannon : ICannon
         return [new Bullet(position, 0, 1)];
     }
 
-    public Bullet[] FireTick(Position position)
-    {
-        if (!secondShotPending)
-        {
-            return [];
-        }
 
-        secondShotPending = false;
-        return [new Bullet(position, 0, 1)];
-    }
 }
