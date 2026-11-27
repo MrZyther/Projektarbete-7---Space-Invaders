@@ -8,5 +8,4 @@ class PlayerCannon : ICannon
         }
         return [];
     }
-
 }
