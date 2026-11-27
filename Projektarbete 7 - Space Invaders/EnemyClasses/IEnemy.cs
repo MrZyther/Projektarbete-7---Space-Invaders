@@ -1,6 +1,5 @@
 interface IEnemy : IControls
 {
-
     void Advance();
     Bullet[] TryFire(ConsoleKey? key);
     void Draw(Map map);

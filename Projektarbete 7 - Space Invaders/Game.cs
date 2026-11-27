@@ -64,7 +64,6 @@
             }
 
             RunTurn(key);
-            playerBullets.RemoveAll(bullet => enemies.Any(enemy => enemy.TryHit(bullet, out _)));
             Draw();
             Thread.Sleep(60);
         }
@@ -107,8 +106,9 @@
         {
             foreach (IEnemy enemy in enemies)
             {
-                if (enemy.TryHit(bullet, out _))
+                if (enemy.TryHit(bullet, out Bullet[] response))
                 {
+                    enemyBullets.AddRange(response);
                     playerBullets.Remove(bullet);
                     break;
                 }
@@ -138,13 +138,12 @@
 
     public void EnemyFire()
     {
-
-    foreach (IEnemy enemy in enemies)
-    {
-        if (random.Next(25) == 0)
+        foreach (IEnemy enemy in enemies)
         {
-            enemyBullets.AddRange(enemy.TryFire(null));
+            if (random.Next(25) == 0)
+            {
+                enemyBullets.AddRange(enemy.TryFire(null));
+            }
         }
-    }
-    }
+}
 }

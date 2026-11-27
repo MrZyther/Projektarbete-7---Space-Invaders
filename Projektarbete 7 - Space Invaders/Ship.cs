@@ -1,13 +1,17 @@
 class Ship : IControls
 {
     private readonly IControls movement;
-    private readonly ICannon cannon;
+    protected readonly ICannon cannon;
     protected readonly Position position;
-    protected readonly char symbol;
+    private readonly char symbol;
     protected int health;
-    
 
-    public Ship(IControls movement, ICannon cannon, Position position, int health, char symbol)
+    public Ship(
+        IControls movement,
+        ICannon cannon,
+        Position position,
+        int health,
+        char symbol)
     {
         this.movement = movement;
         this.cannon = cannon;
@@ -16,7 +20,7 @@ class Ship : IControls
         this.symbol = symbol;
     }
 
-    public void Move (Position target, ConsoleKey? key)
+    public void Move(Position target, ConsoleKey? key)
     {
         movement.Move(target, key);
     }
@@ -26,12 +30,13 @@ class Ship : IControls
         movement.Move(position, null);
     }
 
-    public Bullet[] TryFire(ConsoleKey? key)
+    public virtual Bullet[] TryFire(ConsoleKey? key)
     {
         if (health <= 0)
         {
             return [];
         }
+
         return cannon.TryFire(position, key);
     }
 
@@ -42,6 +47,7 @@ class Ship : IControls
             position.Draw(map, symbol);
         }
     }
+
     public virtual bool TryHit(Bullet bullet, out Bullet[] response)
     {
         response = [];
@@ -53,6 +59,4 @@ class Ship : IControls
         health--;
         return true;
     }
-
-    
 }
