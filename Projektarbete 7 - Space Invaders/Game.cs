@@ -62,4 +62,6 @@ internal sealed class Game
         map.CreateMap();
         scoreboard.Draw();
     }
+
+    
 }
